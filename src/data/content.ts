@@ -117,7 +117,7 @@ export const education = {
 export const coreSkills = [
   { name: "React", level: "Expert" },
   { name: "Next.js", level: "Expert" },
-  { name: "NestJS / Node.js", level: "Advanced" },
+  { name: "NestJS", level: "Advanced" },
   { name: "TypeScript", level: "Advanced" },
   { name: "React Native", level: "Advanced" },
 ] as const;
