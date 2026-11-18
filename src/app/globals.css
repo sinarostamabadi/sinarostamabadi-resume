@@ -261,10 +261,17 @@ a {
 }
 
 .hero-title {
-  font-size: clamp(2.35rem, 11vw, 3.4rem);
-  line-height: 0.92;
-  word-break: normal;
-  overflow-wrap: anywhere;
+  font-size: clamp(1.9rem, 8.4vw, 3.4rem);
+  line-height: 0.94;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+.hero-title > span {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .hero-support {
