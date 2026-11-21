@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Figtree, Unbounded, IBM_Plex_Mono } from "next/font/google";
+import { Figtree, Unbounded, IBM_Plex_Mono, Vazirmatn } from "next/font/google";
+import { AppProviders } from "@/context/AppProviders";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -21,6 +22,12 @@ const ibm = IBM_Plex_Mono({
   display: "swap",
 });
 
+const vazirmatn = Vazirmatn({
+  variable: "--font-vazirmatn",
+  subsets: ["arabic", "latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Sina Rostamabadi — Kinetic Studio",
   description:
@@ -38,11 +45,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${figtree.variable} ${unbounded.variable} ${ibm.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${figtree.variable} ${unbounded.variable} ${ibm.variable} ${vazirmatn.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("ks-theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");document.documentElement.dataset.theme="dark";}var l=localStorage.getItem("ks-locale");var nav=navigator.language.toLowerCase();var locale=(l==="en"||l==="fa"||l==="tr")?l:(nav.indexOf("fa")===0?"fa":nav.indexOf("tr")===0?"tr":"en");document.documentElement.lang=locale;document.documentElement.dataset.locale=locale;document.documentElement.dir=locale==="fa"?"rtl":"ltr";}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="relative flex min-h-full flex-col bg-paper font-sans text-ink">
         <div className="grain" aria-hidden />
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

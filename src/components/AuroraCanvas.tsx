@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useApp } from "@/context/AppProviders";
 
 type Blob = {
   x: number;
@@ -14,6 +15,7 @@ type Blob = {
 export function AuroraCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0.5, y: 0.35 });
+  const { theme } = useApp();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,6 +28,7 @@ export function AuroraCanvas() {
     let width = 0;
     let height = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dark = theme === "dark";
 
     const blobs: Blob[] = [
       { x: 0.2, y: 0.25, r: 0.28, vx: 0.00018, vy: 0.00012, hue: 178 },
@@ -54,9 +57,15 @@ export function AuroraCanvas() {
       ctx.clearRect(0, 0, width, height);
 
       const g = ctx.createLinearGradient(0, 0, width, height);
-      g.addColorStop(0, "#e7edf5");
-      g.addColorStop(0.5, "#eef3f9");
-      g.addColorStop(1, "#dde6f2");
+      if (dark) {
+        g.addColorStop(0, "#0a1220");
+        g.addColorStop(0.5, "#0d1626");
+        g.addColorStop(1, "#0b1422");
+      } else {
+        g.addColorStop(0, "#e7edf5");
+        g.addColorStop(0.5, "#eef3f9");
+        g.addColorStop(1, "#dde6f2");
+      }
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, width, height);
 
@@ -73,12 +82,13 @@ export function AuroraCanvas() {
 
         const grad = ctx.createRadialGradient(px, py, 0, px, py, radius * pulse);
         if (b.hue < 40) {
-          grad.addColorStop(0, "rgba(201, 107, 44, 0.18)");
-          grad.addColorStop(0.45, "rgba(201, 107, 44, 0.06)");
+          grad.addColorStop(0, dark ? "rgba(201, 107, 44, 0.16)" : "rgba(201, 107, 44, 0.18)");
+          grad.addColorStop(0.45, dark ? "rgba(201, 107, 44, 0.05)" : "rgba(201, 107, 44, 0.06)");
           grad.addColorStop(1, "rgba(201, 107, 44, 0)");
         } else {
-          grad.addColorStop(0, `hsla(${b.hue}, 55%, 48%, 0.22)`);
-          grad.addColorStop(0.5, `hsla(${b.hue}, 50%, 55%, 0.08)`);
+          const alpha = dark ? 0.16 : 0.22;
+          grad.addColorStop(0, `hsla(${b.hue}, 55%, ${dark ? 42 : 48}%, ${alpha})`);
+          grad.addColorStop(0.5, `hsla(${b.hue}, 50%, ${dark ? 48 : 55}%, ${dark ? 0.06 : 0.08})`);
           grad.addColorStop(1, `hsla(${b.hue}, 50%, 60%, 0)`);
         }
 
@@ -101,7 +111,7 @@ export function AuroraCanvas() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas

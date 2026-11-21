@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { nav, profile } from "@/data/content";
+import { profile } from "@/data/content";
+import { useApp } from "@/context/AppProviders";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Nav() {
+  const { t, theme, toggleTheme } = useApp();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,33 +26,82 @@ export function Nav() {
         scrolled ? "border-b border-line bg-paper/80 backdrop-blur-xl" : "bg-transparent"
       }`}
     >
-      <div className="container-wide flex items-center justify-between gap-4 py-4">
-        <a href="#top" className="font-display text-[0.95rem] font-semibold tracking-tight text-ink">
-          {profile.firstName}
-          <span className="text-accent">.</span>
-        </a>
+      <div className="container-wide py-3 md:py-4">
+        <div className="flex items-center justify-between gap-3">
+          <a href="#top" className="font-display shrink-0 text-[0.95rem] font-semibold tracking-tight text-ink">
+            {t.profile.firstName}
+            <span className="text-accent">.</span>
+          </a>
 
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
-          {nav.map((item) => (
-            <a key={item.href} href={item.href} className="nav-link">
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex max-w-[70%] items-center gap-3 overflow-x-auto md:max-w-none md:overflow-visible">
-          <nav className="flex items-center gap-4 md:hidden" aria-label="Mobile">
-            {nav.map((item) => (
-              <a key={item.href} href={item.href} className="nav-link whitespace-nowrap text-[0.8rem]">
+          <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
+            {t.nav.map((item) => (
+              <a key={item.href} href={item.href} className="nav-link">
                 {item.label}
               </a>
             ))}
           </nav>
-          <a href={profile.resumeHref} download={profile.resumeFileName} className="btn-ghost !min-h-10 !px-3 !py-2 text-[0.8rem]">
-            Resume
-          </a>
+
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <LanguageSwitcher />
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="chrome-btn"
+              aria-label={theme === "dark" ? t.chrome.themeLight : t.chrome.themeDark}
+            >
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+
+            <a
+              href={profile.resumeHref}
+              download={profile.resumeFileName}
+              className="btn-ghost !min-h-10 !px-3 !py-2 text-[0.8rem]"
+            >
+              {t.chrome.resume}
+            </a>
+          </div>
         </div>
+
+        <nav
+          className="mobile-nav-row mt-2.5 flex items-center justify-between gap-1 border-t border-line/70 pt-2.5 lg:hidden"
+          aria-label="Mobile"
+        >
+          {t.nav.map((item) => (
+            <a key={item.href} href={item.href} className="nav-link mobile-nav-link">
+              {item.label}
+            </a>
+          ))}
+        </nav>
       </div>
     </motion.header>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="M12 2v2.5M12 19.5V22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

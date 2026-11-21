@@ -1,22 +1,24 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { projects } from "@/data/content";
+import { useApp } from "@/context/AppProviders";
 import { MotionReveal } from "./MotionReveal";
 
 export function Work() {
+  const { t } = useApp();
+
   return (
     <section id="work" className="section-pad relative z-10 py-24 md:py-32">
       <div className="container-wide">
         <MotionReveal>
-          <p className="eyebrow mb-3">Selected work</p>
+          <p className="eyebrow mb-3">{t.work.eyebrow}</p>
           <h2 className="font-display max-w-2xl text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.05] font-bold tracking-tight">
-            Products shipped for accounting, payments, and operations.
+            {t.work.title}
           </h2>
         </MotionReveal>
 
         <div className="mt-14 space-y-4 md:mt-16">
-          {projects.map((project, index) => (
+          {t.work.projects.map((project, index) => (
             <MotionReveal key={project.id} delay={index * 0.05}>
               <motion.article
                 whileHover={{ y: -4 }}
@@ -43,7 +45,7 @@ export function Work() {
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-md border border-line bg-white/50 px-2.5 py-1 text-[0.72rem] font-bold text-ink-soft"
+                          className="rounded-md border border-line bg-surface px-2.5 py-1 text-[0.72rem] font-bold text-ink-soft"
                         >
                           {tag}
                         </span>
@@ -51,7 +53,7 @@ export function Work() {
                     </div>
                   </div>
 
-                  <div className="lg:pt-2 lg:text-right">
+                  <div className="lg:pt-2 lg:text-end">
                     {project.url ? (
                       <a
                         href={project.url}
@@ -63,7 +65,7 @@ export function Work() {
                         <span aria-hidden>↗</span>
                       </a>
                     ) : (
-                      <span className="text-sm font-semibold text-muted">Private deployment</span>
+                      <span className="text-sm font-semibold text-muted">{t.work.privateDeployment}</span>
                     )}
                   </div>
                 </div>
